@@ -1,36 +1,35 @@
-# EduCraft-
-// pages/api/generate.js
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST allowed" });
-  }
+"use client"; // Needed so we can use React hooks
 
-  try {
-    const { text } = JSON.parse(req.body);
+import { useState } from "react";
 
-    // Call OpenAI API
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+export default function Home() {
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+
+  async function handleGenerate() {
+    const res = await fetch("/api/generate", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "You are an assistant for teachers. Generate a short quiz and summary." },
-          { role: "user", content: text },
-        ],
-      }),
+      body: JSON.stringify({ text: input }),
     });
 
-    const data = await response.json();
-    const output = data.choices?.[0]?.message?.content || "No output";
-
-    res.status(200).json({ result: output });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
+    const data = await res.json();
+    setOutput(data.result);
   }
+
+  return (
+    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h1>ClassGenie AI ✨</h1>
+      <textarea
+        rows="5"
+        cols="50"
+        placeholder="Paste lesson text here..."
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <br />
+      <button onClick={handleGenerate}>Generate Quiz</button>
+      <h2>Result:</h2>
+      <pre>{output}</pre>
+    </div>
+  );
 }
- 
