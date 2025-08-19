@@ -1,5 +1,6 @@
-"use client"; // Needed so we can use React hooks
+"use client"; // needed so we can use hooks
 
+import { useState } from "react";
 import { useState } from "react";
 
 export default function Home() {
