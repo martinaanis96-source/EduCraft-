@@ -1,4 +1,4 @@
-"use client"; // needed for hooks
+"use client";
 
 import { useState } from "react";
 
@@ -9,6 +9,7 @@ export default function Home() {
   async function handleGenerate() {
     const res = await fetch("/api/generate", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: input }),
     });
 

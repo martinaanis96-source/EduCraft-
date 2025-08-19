@@ -1,5 +1,14 @@
-import { NextResponse } from "next/server";
-
 export async function POST(req) {
-  return NextResponse.json({ result: "Hello from API 🚀" });
+  try {
+    const body = await req.json();
+    return new Response(
+      JSON.stringify({ result: `You sent: ${body.text}` }),
+      { status: 200 }
+    );
+  } catch (e) {
+    return new Response(
+      JSON.stringify({ error: "Invalid request" }),
+      { status: 400 }
+    );
+  }
 }
